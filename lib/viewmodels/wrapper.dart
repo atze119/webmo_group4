@@ -33,7 +33,7 @@ class Wrapper extends StatelessWidget {
                   return Loading();
                 } else {
                   bool isAdmin = snapshot.data ?? false;
-                  return Foodview();//isAdmin ? HomeAdmin() : HomeUser();
+                  return FoodView();//isAdmin ? HomeAdmin() : HomeUser(); TODO change this for normal use
                 }
               },
             );

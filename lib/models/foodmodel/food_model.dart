@@ -3,7 +3,7 @@ import 'package:decimal/decimal.dart';
 class FoodModel {
 
   final String name, foodType;
-  final String price;
+  final String price; // TODO maybe change price to decimal
 
   FoodModel({required this.name, required this.foodType, required this.price});
 

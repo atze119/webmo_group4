@@ -8,6 +8,8 @@ class DatabaseFood {
   //
   // DatabaseFood({required this.name, required this.foodType, required this.price});
 
+  // TODO maybe switch this .dart-file to an other place, because of MVVM-Purposes
+
   final CollectionReference foodCollection = FirebaseFirestore.instance.collection("FoodCollection");
 
   Future<FoodModel?> createNewFood({required FoodModel foodModel}) async {
@@ -46,5 +48,4 @@ class DatabaseFood {
     return foodModel;
   }
 
-  // Stream<Iterable<FoodModel>> allDishes() => foodCollection.snapshots().map((event) => event.docs.map((doc) => FoodModel.fromSnapshot(doc)))
 }
