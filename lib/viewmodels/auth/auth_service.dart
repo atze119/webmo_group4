@@ -45,7 +45,7 @@ class AuthService{
   }
 
   //register admin with email and password
-  Future adminRegisterWithEmailAndPassword(String email, String password, String authenticationCode) async{
+  Future adminRegisterWithEmailAndPassword(String email, String password, String authenticationCode) async {
     try{
       if(authenticationCode == authCode ){
         UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);

@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import 'package:webmo_group4/models/user_model.dart';
+import "package:webmo_group4/views/food/food_view.dart";
 import "package:webmo_group4/views/home/home_user/home_user.dart";
 
 import "../shared/loading.dart";
@@ -23,7 +24,7 @@ class Wrapper extends StatelessWidget {
         } else {
           UserModel? user = snapshot.data;
           if (user == null) {
-            return Authenticate();
+            return Authenticate(); // login screen!
           } else {
             return FutureBuilder<bool>(
               future: authService.isAdmin(user.uid),
@@ -32,7 +33,7 @@ class Wrapper extends StatelessWidget {
                   return Loading();
                 } else {
                   bool isAdmin = snapshot.data ?? false;
-                  return isAdmin ? HomeAdmin() : HomeUser();
+                  return Foodview();//isAdmin ? HomeAdmin() : HomeUser();
                 }
               },
             );
