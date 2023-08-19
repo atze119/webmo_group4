@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'auth/auth_service.dart';
+
 import 'auth/authenticate.dart';
 
-class WillkommenView extends StatelessWidget {
+class WelcomeView extends StatelessWidget {
+  const WelcomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,22 +12,24 @@ class WillkommenView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               'Willkommen zur Essensplanung!',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Authenticate()), // Zeige den Authentifizierungsbildschirm
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          const Authenticate()), // Zeige den Authentifizierungsbildschirm
                 );
               },
-              child: Text('Login'),
+              child: const Text('Login'),
             ),
           ],
         ),
