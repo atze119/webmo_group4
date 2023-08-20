@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:webmo_group4/models/user_model.dart';
 import 'package:webmo_group4/views/home/home_admin/home_admin.dart';
 import 'package:webmo_group4/views/home/home_user/home_user.dart';
+import 'package:webmo_group4/views/welcome/welcome_view.dart';
 
 import '../shared/loading.dart';
-import 'welcome_view.dart';
 import 'auth/auth_service.dart';
 
 class Wrapper extends StatelessWidget {
