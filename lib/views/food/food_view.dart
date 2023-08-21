@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:webmo_group4/models/repo/database_food.dart';
+import 'package:webmo_group4/viewmodels/food/food_service.dart';
 
 import '../../models/foodmodel/food_model.dart';
 
@@ -13,7 +13,7 @@ class FoodView extends StatefulWidget {
 class _FoodViewState extends State<FoodView> {
   late TextEditingController controller;
   late List<TextEditingController> listController;
-  FoodModel? foodModel;
+  final FoodService provider = FoodService();
 
   @override
   void initState() {
@@ -57,14 +57,13 @@ class _FoodViewState extends State<FoodView> {
                     return; // TODO implement exception handling with error message on display
                   }
                   // TODO maybe change price to Decimal
-                  await DatabaseFood().createNewFood(
-                      foodModel: FoodModel(
-                          name: listController[0].text,
-                          foodType: listController[1].text,
-                          price: listController[2].text));
+                  String foodName = await provider.addNewFood(
+                      foodName: listController[0].text,
+                      foodType: listController[1].text,
+                      foodPrice: listController[2].text);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                          "${foodModel?.name} wurde zur Datenbank hinzugefügt")));
+                      content:
+                          Text("$foodName wurde zur Datenbank hinzugefügt")));
                   // TODO add textfield on display to show Food Attributes
                 },
                 child: const Text("Essen anlegen")),
@@ -79,7 +78,7 @@ class _FoodViewState extends State<FoodView> {
                   if (foodName == null || foodName.isEmpty) {
                     return;
                   }
-                  final foodModel = await DatabaseFood().getFoodModel(foodName);
+                  final foodModel = await provider.getFood(foodName: foodName);
                   // put old values in TextFields (dialog)
                   listController[0].text = foodModel.name;
                   listController[1].text = foodModel.foodType;
@@ -96,11 +95,10 @@ class _FoodViewState extends State<FoodView> {
                     return; // TODO implement exception handling with error message on display
                   }
                   // get new data and update food-information in database
-                  DatabaseFood().updateFoodData(
-                      foodModel: FoodModel(
-                          name: listController[0].text,
-                          foodType: listController[1].text,
-                          price: listController[2].text));
+                  provider.updateFoodData(
+                      foodName: listController[0].text,
+                      foodType: listController[1].text,
+                      foodPrice: listController[2].text);
 
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text("${foodModel.name} wurde Aktualisiert")));
@@ -117,8 +115,8 @@ class _FoodViewState extends State<FoodView> {
                   if (foodName == null || foodName.isEmpty) {
                     return;
                   }
-                  final foodModel = await DatabaseFood().getFoodModel(foodName);
-                  setState(() => this.foodModel = foodModel);
+                  final foodModel = await provider.getFood(foodName: foodName);
+
                   showFood(
                       context: context,
                       foodModel: foodModel); // display food in AlertDialog
@@ -135,10 +133,10 @@ class _FoodViewState extends State<FoodView> {
                   if (foodName == null || foodName.isEmpty) {
                     return;
                   }
-                  DatabaseFood().deleteFood(name: foodName);
+                  provider.deleteFood(foodName: foodName);
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                          "${foodModel?.name} wurde aus der Datenbank gelöscht")));
+                      content:
+                          Text("$foodName wurde aus der Datenbank gelöscht")));
                 },
                 child: const Text("Essen löschen")),
           ],
