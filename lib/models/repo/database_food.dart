@@ -42,7 +42,7 @@ class DatabaseFood {
     await foodCollection.doc(docId).delete();
   }
 
-  Future<FoodModel> getFoodModel(String name) async {
+  Future<FoodModel?> getFoodModel(String name) async {
     final snapshot = await foodCollection.where("name", isEqualTo: name).get();
     final foodModel = snapshot.docs
         .map((e) => FoodModel.fromSnapshot(

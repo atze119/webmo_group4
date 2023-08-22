@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webmo_group4/models/foodmodel/food_model.dart';
 import 'package:webmo_group4/viewmodels/food/food_dialogs.dart';
@@ -9,8 +8,8 @@ class FoodService {
   final FoodDialogs _foodDialogs = FoodDialogs();
 
   Future<void> createFood(BuildContext context) async {
-    List<TextEditingController>? listController = await _foodDialogs
-        .openCreateDialog(
+    List<TextEditingController>? listController =
+        await _foodDialogs.openCreateDialog(
       context: context,
       title: "Essen anlegen",
       action: "HINZUFÜGEN",
@@ -31,11 +30,11 @@ class FoodService {
             foodType: listController[1].text,
             price: listController[2].text));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-            "${listController[0].text} wurde zur Datenbank hinzugefügt")));
+        content:
+            Text("${listController[0].text} wurde zur Datenbank hinzugefügt")));
   }
 
-  Future<void> updateFood(BuildContext context) async{
+  Future<void> updateFood(BuildContext context) async {
     String? foodName = await _foodDialogs.openDialog(
         context: context,
         title: "Welches Gericht möchten Sie ändern",
@@ -45,22 +44,25 @@ class FoodService {
       return;
     }
     FoodModel? foodModel = await DatabaseFood().getFoodModel(foodName);
-    if(foodModel==null){
+    if (foodModel == null) {
       //TODO error handling if FoodModel is null
       return;
     }
 
-    List<TextEditingController>? listController = await _foodDialogs.openUpdateDialog(
+    // put old values in TextFields (dialog)
+    _foodDialogs.listController[0].text = foodModel.name;
+    _foodDialogs.listController[1].text = foodModel.foodType;
+    _foodDialogs.listController[2].text = foodModel.price;
+
+    List<TextEditingController>? listController =
+        await _foodDialogs.openUpdateDialog(
       context: context,
       title: "Aktualisierung",
       action: "ÄNDERN",
     );
-    // put old values in TextFields (dialog)
-    listController![0].text = foodModel.name;
-    listController[1].text = foodModel.foodType;
-    listController[2].text = foodModel.price;
+
     // check for null / empty
-    if (listController[0].text.isEmpty ||
+    if (listController![0].text.isEmpty ||
         listController[1].text.isEmpty ||
         listController[2].text.isEmpty) {
       return; // TODO implement exception handling with error message on display
@@ -72,8 +74,8 @@ class FoodService {
             foodType: listController[1].text,
             price: listController[2].text));
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("${foodModel.name} wurde Aktualisiert")));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("${foodModel.name} wurde Aktualisiert")));
   }
 
   Future<void> showFood(BuildContext context) async {
@@ -109,5 +111,4 @@ class FoodService {
       content: Text("$foodName wurde aus der Datenbank gelöscht"),
     ));
   }
-
 }
