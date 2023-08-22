@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../viewmodels/food/food_service.dart';
+import 'package:webmo_group4/views/food/food_dialogs.dart';
 
 class FoodView extends StatefulWidget {
   const FoodView({super.key});
@@ -10,11 +9,11 @@ class FoodView extends StatefulWidget {
 }
 
 class _FoodViewState extends State<FoodView> {
-  late FoodService _foodService;
+  late FoodDialogs _foodDialogs;
 
   @override
   void initState() {
-    _foodService = FoodService();
+    _foodDialogs = FoodDialogs();
     super.initState();
   }
 
@@ -32,22 +31,22 @@ class _FoodViewState extends State<FoodView> {
           children: [
             TextButton(
                 onPressed: () async {
-                  await _foodService.createFood(context);
+                  await _foodDialogs.openCreateDialog(context: context);
                 },
                 child: const Text("Essen anlegen")),
             TextButton(
                 onPressed: () async {
-                  await _foodService.updateFood(context);
+                  await _foodDialogs.searchAndUpdateDialog(context: context);
                 },
                 child: const Text("Essen aktualisieren")),
             TextButton(
                 onPressed: () async {
-                  await _foodService.showFood(context);
+                  _foodDialogs.searchAndShowFood(context: context);
                 },
                 child: const Text("Essen anzeigen")),
             TextButton(
                 onPressed: () async {
-                  await _foodService.deleteFood(context);
+                  await _foodDialogs.deleteFood(context: context);
                 },
                 child: const Text("Essen löschen")),
           ],
