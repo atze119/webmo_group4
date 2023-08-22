@@ -1,66 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:webmo_group4/models/foodmodel/food_model.dart';
-import 'package:webmo_group4/viewmodels/food/food_dialogs.dart';
+import 'package:webmo_group4/views/food/food_dialogs.dart';
 
 import '../../models/repo/database_food.dart';
 
 class FoodService {
-  final FoodDialogs _foodDialogs = FoodDialogs();
+  static FoodModel? foodModel;
 
-  Future<void> createFood(BuildContext context) async {
-    List<TextEditingController>? listController =
-        await _foodDialogs.openCreateDialog(
-      context: context,
-      title: "Essen anlegen",
-      action: "HINZUFÜGEN",
-      hintTextName: "Geben Sie den Namen an",
-      hintTextType: "Geben Sie die Art an",
-      hintTextPrice: "Geben Sie den Preis an",
-    );
-
-    if (listController![0].text.isEmpty ||
+  Future<void> createFood(List<TextEditingController> listController) async {
+    if (listController[0].text.isEmpty ||
         listController[1].text.isEmpty ||
         listController[2].text.isEmpty) {
       // TODO: Implement exception handling with error message on display
       return;
     }
-    await DatabaseFood().createNewFood(
-        foodModel: FoodModel(
-            name: listController[0].text,
-            foodType: listController[1].text,
-            price: listController[2].text));
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content:
-            Text("${listController[0].text} wurde zur Datenbank hinzugefügt")));
+    foodModel = FoodModel(
+        name: listController[0].text,
+        foodType: listController[1].text,
+        price: listController[2].text);
+    await DatabaseFood().createNewFood(foodModel: foodModel!);
   }
 
-  Future<void> updateFood(BuildContext context) async {
-    String? foodName = await _foodDialogs.openDialog(
-        context: context,
-        title: "Welches Gericht möchten Sie ändern",
-        action: "SUCHE",
-        hintText: "Geben Sie den Namen des Gerichts ein");
-    if (foodName == null || foodName.isEmpty) {
-      return;
-    }
-    FoodModel? foodModel = await DatabaseFood().getFoodModel(foodName);
-    if (foodModel == null) {
-      //TODO error handling if FoodModel is null
-      return;
-    }
-
-    // put old values in TextFields (dialog)
-    _foodDialogs.listController[0].text = foodModel.name;
-    _foodDialogs.listController[1].text = foodModel.foodType;
-    _foodDialogs.listController[2].text = foodModel.price;
-
-    List<TextEditingController>? listController =
-        await _foodDialogs.openUpdateDialog(
-      context: context,
-      title: "Aktualisierung",
-      action: "ÄNDERN",
-    );
-
+  Future<void> updateFood(List<TextEditingController>? listController) async {
     // check for null / empty
     if (listController![0].text.isEmpty ||
         listController[1].text.isEmpty ||
@@ -68,47 +29,30 @@ class FoodService {
       return; // TODO implement exception handling with error message on display
     }
     // get new data and update food-information in database
-    DatabaseFood().updateFoodData(
-        foodModel: FoodModel(
-            name: listController[0].text,
-            foodType: listController[1].text,
-            price: listController[2].text));
-
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("${foodModel.name} wurde Aktualisiert")));
+    foodModel = FoodModel(
+        name: listController[0].text,
+        foodType: listController[1].text,
+        price: listController[2].text);
+    await DatabaseFood().updateFoodData(foodModel: foodModel!);
   }
 
-  Future<void> showFood(BuildContext context) async {
-    String? foodName = await _foodDialogs.openDialog(
-      context: context,
-      title: "Suche",
-      action: "SUCHE",
-      hintText: "Geben Sie den Namen des Gerichts ein",
-    );
-    if (foodName == null || foodName.isEmpty) {
-      return;
-    }
-    FoodModel? foodModel = await DatabaseFood().getFoodModel(foodName);
+  Future<void> deleteFood({required String foodName}) async {
+    await DatabaseFood().deleteFood(name: foodName);
+  }
+
+  Future<void> listControllerUpdate({required String foodName}) async {
+    await setFood(foodName: foodName); // setting Food which will be changed
+    // put old values in TextFields (dialog)
+    FoodDialogs.listController[0].text = foodModel!.name;
+    FoodDialogs.listController[1].text = foodModel!.foodType;
+    FoodDialogs.listController[2].text = foodModel!.price;
+  }
+
+  Future<void> setFood({required String foodName}) async {
+    foodModel = foodModel = await DatabaseFood().getFoodModel(foodName);
     if (foodModel == null) {
       // TODO: Implement error handling if foodModel is null
       return;
     }
-    _foodDialogs.showFood(context: context, foodModel: foodModel);
-  }
-
-  Future<void> deleteFood(BuildContext context) async {
-    String? foodName = await _foodDialogs.openDialog(
-      context: context,
-      title: "Entfernen",
-      action: "LÖSCHEN",
-      hintText: "Geben Sie den Namen des Gerichtes ein",
-    );
-    if (foodName == null || foodName.isEmpty) {
-      return;
-    }
-    await DatabaseFood().deleteFood(name: foodName);
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text("$foodName wurde aus der Datenbank gelöscht"),
-    ));
   }
 }
