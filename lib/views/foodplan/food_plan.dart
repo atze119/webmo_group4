@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:webmo_group4/views/food/foodplan/week_card.dart';
+import 'package:webmo_group4/views/foodplan/week_card.dart';
 
 class FoodPlan extends StatefulWidget {
   const FoodPlan({super.key});
@@ -31,6 +31,7 @@ class _FoodPlanState extends State<FoodPlan> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("Essensplan"),
         actions: [

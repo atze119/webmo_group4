@@ -76,6 +76,7 @@ class FoodDialogs {
           ],
         ),
       );
+
   void searchAndShowFood({
     required BuildContext context,
   }) {
