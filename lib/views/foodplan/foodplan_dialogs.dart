@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:webmo_group4/models/foodmodel/food_model.dart';
+import 'package:webmo_group4/models/repo/database_foodplan.dart';
 
 import '../../viewmodels/food/food_service.dart';
 import '../../viewmodels/foodplan/foodplan_service.dart';
@@ -56,26 +58,42 @@ class FoodPlanDialogs {
         ),
       );
 
-  // void showFood(
-  //     {required BuildContext context}) =>
-  //     showDialog(
-  //       context: context,
-  //       builder: (context) => AlertDialog(
-  //         content: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           children: [
-  //             Text("Name: ${foodModel?.name}"),
-  //             Text("Art: ${foodModel?.foodType}"),
-  //             Text("Preis: ${foodModel?.price}"),
-  //           ],
-  //         ),
-  //         actions: [
-  //           TextButton(
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //               child: const Text("SCHLIEßEN"))
-  //         ],
-  //       ),
-  //     );
+  Future<void> showFood({
+    required BuildContext context, required String day, required int week})
+  => showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: FutureBuilder<FoodModel?>(
+              future: _foodPlanService.getFoodDetails(week, day),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Fehler: ${snapshot.error}');
+                } else if (!snapshot.hasData) {
+                  return Text('Keine Daten verfügbar');
+                } else {
+                  FoodModel foodDetails = snapshot.data!;
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Name: ${foodDetails.name}"),
+                      Text("Art: ${foodDetails.foodType}"),
+                      Text("Preis: ${foodDetails.price}"),
+                    ],
+                  );
+                }
+              },
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("SCHLIEßEN"))
+            ],
+          );
+        }
+    );
 }

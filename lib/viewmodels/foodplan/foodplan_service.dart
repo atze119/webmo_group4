@@ -20,6 +20,21 @@ class FoodPlanService{
     await DatabaseFoodPlan().addFoodToPlan(week: week, day: day, foodName: foodModel!.name);
   }
 
+  Future<FoodModel?> getFoodDetails(int week, String day) async{
+    String? foodName = await DatabaseFoodPlan().getFoodNameFromPlan(day: day, week: week);
+    if(foodName != null){
+      FoodModel? foodDetails = await DatabaseFoodPlan().getFoodDetails(foodName);
+      if(foodDetails != null){
+        return foodDetails;
+      }else{
+        //TODO: handle exception
+        return null;
+      }
+    }else{
+      //TODO: handle exception
+      return null;
+    }
+  }
 
 
 }

@@ -13,19 +13,19 @@ class _FoodPlanState extends State<FoodPlan> {
   int currentPage = 0;
 
   void _previousWeek() {
-    setState(() {
-      if (currentPage > 0) {
-        currentPage--;
-      }
-    });
+    if(currentPage > 0) {
+      setState(() {
+          currentPage--;
+      });
+    }
   }
 
   void _nextWeek() {
-    setState(() {
-      if (currentPage < 7) {
-        currentPage++;
-      }
-    });
+    if(currentPage<7) {
+      setState(() {
+          currentPage++;
+      });
+    }
   }
 
   @override
@@ -35,6 +35,12 @@ class _FoodPlanState extends State<FoodPlan> {
       appBar: AppBar(
         title: Text("Essensplan"),
         actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: (){
+              setState(() {});
+            },
+          ),
           IconButton(
             icon: Icon(Icons.arrow_left),
             onPressed: () {
