@@ -28,7 +28,7 @@ class FoodService {
         foodModel: FoodModel(
             name: listController[0].text,
             foodType: listController[1].text,
-            price: listController[2].text));
+            price: listController[2].text,));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content:
             Text("${listController[0].text} wurde zur Datenbank hinzugefügt")));
