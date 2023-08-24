@@ -66,4 +66,12 @@ class FoodPlanService{
     FoodPlanDialogs.listController[2].text = foodModel.price;
   }
 
+  Future<List<FoodModel>> getAllFoodFromFoodCollection() async{
+    return await DatabaseFood().getAllFromFoodCollection();
+  }
+
+  void addFoodFromListToFoodPlanCollection(FoodModel food, String day, int week) async{
+    await DatabaseFoodPlan().addFoodToPlan(week: "Woche$week", day: day, foodName: food.name);
+  }
+
 }

@@ -53,7 +53,7 @@ class FoodCard extends StatelessWidget {
                           FoodPlanDialogs().openUpdateDialog(context: context, week: weekIndex+1, day: day);
                         }else {
                           FoodPlanDialogs().openCreateDialog(
-                              context: context, week: "Woche${weekIndex + 1}", day: day);
+                              context: context, week: "Woche${weekIndex + 1}", day: day, weekIndex: weekIndex+1);
                         }
                       },
                     ),

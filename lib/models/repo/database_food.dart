@@ -3,12 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../foodmodel/food_model.dart';
 
 class DatabaseFood {
-  // final String name, foodType;
-  // final Decimal price;
-  //
-  // DatabaseFood({required this.name, required this.foodType, required this.price});
-
-  // TODO maybe switch this .dart-file to an other place, because of MVVM-Purposes
 
   final CollectionReference foodCollection =
       FirebaseFirestore.instance.collection("FoodCollection");
@@ -55,9 +49,7 @@ class DatabaseFood {
   Future<FoodModel?> getFoodModel(String name) async {
     final snapshot = await foodCollection.where("name", isEqualTo: name).get();
     final foodModel = snapshot.docs
-        .map((e) => FoodModel.fromSnapshot(
-            e as QueryDocumentSnapshot<Map<String, dynamic>>))
-        .single;
+        .map((e) => FoodModel.fromSnapshot(e as QueryDocumentSnapshot<Map<String, dynamic>>)).single;
     return foodModel;
   }
 
@@ -66,4 +58,11 @@ class DatabaseFood {
     final docId = snapshot.docs.single.id;
     return docId;
   }
+
+  Future<List<FoodModel>> getAllFromFoodCollection() async {
+    QuerySnapshot snapshot = await foodCollection.get();
+    return snapshot.docs.map((doc) => FoodModel.fromSnapshot
+      (doc as QueryDocumentSnapshot<Map<String, dynamic>>)).toList();
+  }
+
 }

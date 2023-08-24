@@ -18,7 +18,7 @@ class FoodPlanDialogs {
   }
 
   Future<List<TextEditingController>?> openCreateDialog({
-    required BuildContext context, required String week, required String day
+    required BuildContext context, required String week, required String day, required int weekIndex,
   }) =>
       showDialog<List<TextEditingController>>(
         context: context,
@@ -40,17 +40,29 @@ class FoodPlanDialogs {
                 controller: listController[2]), // == price
           ]),
           actions: [
-            TextButton(
-              onPressed: () async {
-                  await _foodPlanService.createFood(listController, week, day);
-                  await _foodService.createFood(listController);
-                Navigator.of(context).pop(listController);
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "${FoodPlanService.foodModel?.name} wurde zur Datenbank hinzugefügt")));
-              },
-              child: const Text("HINZUFÜGEN"),
-            )
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  child: const Text("AUS LISTE AUSWÄHLEN"),
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                    FoodPlanDialogs().showSelectFoodFromListDialog(context, day, weekIndex);
+                  },
+                ),
+                TextButton(
+                  onPressed: () async {
+                    await _foodPlanService.createFood(listController, week, day);
+                    await _foodService.createFood(listController);
+                    Navigator.of(context).pop(listController);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            "${FoodPlanService.foodModel?.name} wurde zur Datenbank hinzugefügt")));
+                  },
+                  child: const Text("HINZUFÜGEN"),
+                )
+              ],
+            ),
           ],
         ),
       );
@@ -71,13 +83,12 @@ class FoodPlanDialogs {
                 } else if (!snapshot.hasData) {
                   return Text('Keine Daten verfügbar');
                 } else {
-                  FoodModel foodDetails = snapshot.data!;
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Name: ${foodDetails.name}"),
-                      Text("Art: ${foodDetails.foodType}"),
-                      Text("Preis: ${foodDetails.price}"),
+                      Text("Name: ${snapshot.data!.name}"),
+                      Text("Art: ${snapshot.data!.foodType}"),
+                      Text("Preis: ${snapshot.data!.price}"),
                     ],
                   );
                 }
@@ -132,6 +143,47 @@ class FoodPlanDialogs {
       },
     );
   }
+
+  void showSelectFoodFromListDialog(BuildContext context, String day, int weekIndex) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Wählen Sie ein Essen"),
+          content: Container(
+            width: double.maxFinite,
+            child: FutureBuilder<List<FoodModel>>(
+              future: FoodPlanService().getAllFoodFromFoodCollection(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text("Fehler: ${snapshot.error}");
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Text("Keine Daten verfügbar");
+                } else {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                        title: Text(snapshot.data![index].name),
+                        onTap: () {
+                          FoodPlanService().addFoodFromListToFoodPlanCollection(snapshot.data![index], day, weekIndex);
+                          Navigator.of(context).pop();
+                        },
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
 
 
 
