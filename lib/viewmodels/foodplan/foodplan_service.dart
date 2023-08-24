@@ -7,6 +7,7 @@ import '../../views/foodplan/foodplan_dialogs.dart';
 
 class FoodPlanService{
   static FoodModel? foodModel;
+  static FoodModel? foodModelOld;
 
   Future<void> createFood(List<TextEditingController> listController, String week, String day) async {
     if (listController[0].text.isEmpty ||
@@ -53,12 +54,13 @@ class FoodPlanService{
         name: listController[0].text,
         foodType: listController[1].text,
         price: listController[2].text);
-    await DatabaseFood().updateFoodData(foodModel: foodModel!);
+    await DatabaseFood().updateFoodDataForFoodPlan(foodModel: foodModel!, foodModelOld: foodModelOld!);
     await DatabaseFoodPlan().updateFoodInFoodPlanCollection(week: week, day: day, newName: foodModel!.name);
   }
 
   Future<void> listControllerUpdate({required int week, required String day}) async {
     FoodModel? foodModel = await getFoodDetails(week, day);
+    foodModelOld = foodModel;
     FoodPlanDialogs.listController[0].text = foodModel!.name;
     FoodPlanDialogs.listController[1].text = foodModel.foodType;
     FoodPlanDialogs.listController[2].text = foodModel.price;

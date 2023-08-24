@@ -37,6 +37,16 @@ class DatabaseFood {
     });
   }
 
+  Future<void> updateFoodDataForFoodPlan({required FoodModel foodModel, required FoodModel foodModelOld}) async {
+    final docId = await _getFoodId(name: foodModelOld.name);
+    return await foodCollection.doc(docId).set({
+      "name": foodModel.name,
+      "food_type": foodModel.foodType,
+      "price": foodModel.price,
+    });
+  }
+
+
   Future<void> deleteFood({required String name}) async {
     final docId = await _getFoodId(name: name);
     await foodCollection.doc(docId).delete();
