@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:webmo_group4/viewmodels/food/food_service.dart';
 import 'package:webmo_group4/viewmodels/foodplan/foodplan_service.dart';
-import 'package:webmo_group4/views/food/food_dialogs.dart';
 import 'package:webmo_group4/views/foodplan/foodplan_dialogs.dart';
-
 import '../../models/foodmodel/food_model.dart';
 
 class FoodCard extends StatelessWidget {
@@ -39,15 +36,30 @@ class FoodCard extends StatelessWidget {
               onTap: (){
                 FoodPlanDialogs().showFood(context: context, day: day, week: weekIndex + 1);
               },
-              trailing: IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () async {
-                  FoodPlanDialogs().openCreateDialog(context: context, week: "Woche${weekIndex+1}", day: day);
-                },
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                  children:[
+                    IconButton(
+                      icon: Icon(Icons.close, color: Colors.red),
+                      onPressed: (){
+                        FoodPlanService().deleteFoodFromPlan(week: "Woche${weekIndex+1}", day: day);
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.settings),
+                      onPressed: () async {
+                        if(snapshot.hasData){
+                          FoodPlanDialogs().openUpdateDialog(context: context, week: weekIndex+1, day: day);
+                        }else {
+                          FoodPlanDialogs().openCreateDialog(
+                              context: context, week: "Woche${weekIndex + 1}", day: day);
+                        }
+                      },
+                    ),
+                  ]
               ),
             );
           }
-
       ),
     );
   }

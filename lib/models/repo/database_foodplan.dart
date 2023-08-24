@@ -41,7 +41,28 @@ class DatabaseFoodPlan {
     return null;
   }
 
+  Future<void> deleteFoodFromPlan({required String week, required String day}) async {
+    final doc = foodPlanCollection.doc(week);
+    final docSnapshot = await doc.get();
+    if (!docSnapshot.exists) {
+      //throw Exception('document does not exists');
+      //TODO: handle exception
+      return;
+    }
+    Map<String, dynamic> data = docSnapshot.data() as Map<String, dynamic>;
+    if (data.containsKey(day)) {
+      data[day] = FieldValue.delete();
+      await doc.update(data);
+    } else {
+      //throw Exception('day does not exists');
+      //TODO: handle exception
+      return;
+    }
+  }
 
-
+  Future<void> updateFoodInFoodPlanCollection(
+      {required String week, required String day, required String newName}) async {
+    await foodPlanCollection.doc(week).update({day: newName});
+  }
 
 }

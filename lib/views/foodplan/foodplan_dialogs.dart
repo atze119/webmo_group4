@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:webmo_group4/models/foodmodel/food_model.dart';
-import 'package:webmo_group4/models/repo/database_foodplan.dart';
-
 import '../../viewmodels/food/food_service.dart';
 import '../../viewmodels/foodplan/foodplan_service.dart';
 
 class FoodPlanDialogs {
   late TextEditingController controller;
-  static late List<TextEditingController>
-  listController; // im not 100% about this static variable
+  static late List<TextEditingController>listController; // im not 100% about this static variable
   final FoodPlanService _foodPlanService = FoodPlanService();
   final FoodService _foodService = FoodService();
 
@@ -96,4 +93,48 @@ class FoodPlanDialogs {
           );
         }
     );
+
+  Future<List<TextEditingController>?> openUpdateDialog({
+    required BuildContext context,
+    required int week,
+    required String day,
+  }) async {
+    await FoodPlanService().listControllerUpdate(week: week, day: day);
+    // ignore: use_build_context_synchronously
+    return showDialog<List<TextEditingController>>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Aktualisierung"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(autofocus: true, controller: FoodPlanDialogs.listController[0]), // == foodName
+              TextFormField(controller: FoodPlanDialogs.listController[1]), // == foodType
+              TextFormField(controller: FoodPlanDialogs.listController[2]), // == price
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await _foodPlanService.updateFoodEverywhere(
+                    listController: FoodPlanDialogs.listController,
+                    week: "Woche$week",
+                    day: day);
+                Navigator.of(context).pop(FoodPlanDialogs.listController);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("${FoodService.foodModel?.name} wurde Aktualisiert")));
+              },
+              child: const Text("ÄNDERN"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+
+
 }

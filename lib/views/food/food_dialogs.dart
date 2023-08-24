@@ -111,8 +111,7 @@ class FoodDialogs {
         builder: (context) => AlertDialog(
           title: const Text("Aktualisierung"),
           content: Column(mainAxisSize: MainAxisSize.min, children: [
-            TextFormField(
-                autofocus: true, controller: listController[0]), // == foodName
+            TextFormField(autofocus: true, controller: listController[0]), // == foodName
             TextFormField(controller: listController[1]), // == foodType
             TextFormField(controller: listController[2]), // == price
           ]),
