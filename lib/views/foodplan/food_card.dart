@@ -28,7 +28,8 @@ class FoodCard extends StatelessWidget {
               subtitle = Text("Name: ${snapshot.data?.name}\nArt: ${snapshot.data?.foodType}\nPreis: ${snapshot.data?.price}");
             }
             else {
-              title = "Keine Daten verfügbar";
+              title = day;
+              subtitle = const Text("Keine Daten verfügbar");
             }
             return ListTile(
               title: Text(title),
