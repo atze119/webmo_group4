@@ -3,7 +3,6 @@ import 'package:webmo_group4/shared/constants.dart';
 import 'package:webmo_group4/views/food/food_view.dart';
 
 import '../../../viewmodels/auth/auth_service.dart';
-import '../../foodplan/food_plan.dart';
 
 class HomeAdmin extends StatelessWidget {
   HomeAdmin({super.key});
@@ -34,7 +33,7 @@ class HomeAdmin extends StatelessWidget {
         body: TextButton(
           onPressed: () {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const FoodPlan()));
+                MaterialPageRoute(builder: (context) => const FoodView()));
           },
           child: const Text("Go to FoodView"),
         ));
