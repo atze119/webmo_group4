@@ -2,10 +2,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:webmo_group4/shared/constants.dart';
 import 'package:webmo_group4/views/food/food_view.dart';
-
-import '../../../viewmodels/auth/auth_service.dart';
-import '../../food_rating/food_rating_view.dart';
-import '../../foodplan/food_plan.dart';
+import '../../viewmodels/auth/auth_service.dart';
+import '../food_rating/food_rating_view.dart';
+import '../foodplan/food_plan.dart';
 
 class HomeAdmin extends StatelessWidget {
   HomeAdmin({super.key});
@@ -17,6 +16,7 @@ class HomeAdmin extends StatelessWidget {
     return Scaffold(
         backgroundColor: colorbg1,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: colorbg2,
           title: const Text("Admin Home Screen"),
           actions: [
@@ -29,6 +29,7 @@ class HomeAdmin extends StatelessWidget {
               label: const Text("logout"),
               onPressed: () async {
                 await _authService.signOut();
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FoodPlan()));
               },
             ),
           ],

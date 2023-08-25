@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:webmo_group4/viewmodels/auth/auth_service.dart';
+import 'package:webmo_group4/viewmodels/auth/authenticate.dart';
 import 'package:webmo_group4/views/foodplan/week_card.dart';
 
 class FoodPlan extends StatefulWidget {
@@ -9,6 +11,13 @@ class FoodPlan extends StatefulWidget {
 }
 
 class _FoodPlanState extends State<FoodPlan> {
+  bool isAdmin = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isAdmin = AuthService().isAdmin();
+  }
 
   int currentPage = 0;
 
@@ -53,6 +62,19 @@ class _FoodPlanState extends State<FoodPlan> {
               _nextWeek();
             },
           ),
+          if(!isAdmin)
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+              ),
+              icon: const Icon(Icons.person),
+              label: const Text("Admin"),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Authenticate(),
+                ));
+              },
+            ),
         ],
       ),
       body: WeekCard(weekIndex: currentPage, onActionCompleted: (){

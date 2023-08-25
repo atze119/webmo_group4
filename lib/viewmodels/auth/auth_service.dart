@@ -12,32 +12,11 @@ class AuthService{
     return user != null ? UserModel(uid: user.uid) : null;
   }
 
-  //auth change user stream
-  Stream<UserModel?> get user {
-    return _auth.authStateChanges()
-        .map((User? user) => _userFromUserCredential(user));
-  }
-
   //sign in with email and password
   Future signInWithEmailAndPassword(String email, String password) async{
     try{
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
-      return _userFromUserCredential(user);
-    }catch(e){
-      print(e.toString());
-    }
-  }
-
-  //register user with email and password
-  Future userRegisterWithEmailAndPassword(String email, String password) async{
-    try{
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      User? user = userCredential.user;
-
-      //create new document for user with uid
-      await DatabaseAuth(uid: user!.uid).updateUserData();
-
       return _userFromUserCredential(user);
     }catch(e){
       print(e.toString());
@@ -62,8 +41,13 @@ class AuthService{
   }
 
   //Admin or User?
-  Future<bool> isAdmin(String uid) async {
-    return await DatabaseAuth(uid: uid).isAdmin();
+  bool isAdmin()  {
+    bool adminStatus = false;
+    final user = _auth.currentUser;
+    if(user != null){
+      adminStatus = true;
+    }
+    return adminStatus;
   }
 
   //sign out

@@ -1,44 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:webmo_group4/viewmodels/auth/authenticate.dart';
+import 'package:webmo_group4/views/foodplan/food_plan.dart';
 
-class WelcomeView extends StatefulWidget {
+class WelcomeView extends StatelessWidget {
   const WelcomeView({super.key});
 
   @override
-  State<WelcomeView> createState() => _WelcomeViewState();
-}
-
-class _WelcomeViewState extends State<WelcomeView> {
-  bool isPressed = false;
-
-  @override
   Widget build(BuildContext context) {
-    return isPressed
-        ? const Authenticate()
-        : Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Willkommen zur Essensplanung!',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        isPressed = true;
-                      });
-                    },
-                    child: const Text('Login'),
-                  ),
-                ],
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Willkommen zur Essensplanung!',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          );
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => FoodPlan(),
+                ));
+              },
+              child: const Text('Essensplan'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
