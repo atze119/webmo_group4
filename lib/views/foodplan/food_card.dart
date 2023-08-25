@@ -6,7 +6,8 @@ import '../../models/foodmodel/food_model.dart';
 class FoodCard extends StatelessWidget {
   final int weekIndex;
   final String day;
-  const FoodCard({super.key, required this.day, required this.weekIndex});
+  final VoidCallback onActionCompleted;
+  const FoodCard({super.key, required this.day, required this.weekIndex, required this.onActionCompleted});
 
   @override
   Widget build(BuildContext context) {
@@ -43,17 +44,17 @@ class FoodCard extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.close, color: Colors.red),
                       onPressed: (){
-                        FoodPlanService().deleteFoodFromPlan(week: "Woche${weekIndex+1}", day: day);
+                        FoodPlanService().deleteFoodFromPlan(week: "Woche${weekIndex+1}", day: day, onCompleted: onActionCompleted);
                       },
                     ),
                     IconButton(
                       icon: Icon(Icons.settings),
                       onPressed: () async {
                         if(snapshot.hasData){
-                          FoodPlanDialogs().openUpdateDialog(context: context, week: weekIndex+1, day: day);
+                          FoodPlanDialogs().openUpdateDialog(context: context, week: weekIndex+1, day: day, onCompleted: onActionCompleted);
                         }else {
                           FoodPlanDialogs().openCreateDialog(
-                              context: context, week: "Woche${weekIndex + 1}", day: day, weekIndex: weekIndex+1);
+                              context: context, week: "Woche${weekIndex + 1}", day: day, weekIndex: weekIndex+1, onCompleted: onActionCompleted);
                         }
                       },
                     ),

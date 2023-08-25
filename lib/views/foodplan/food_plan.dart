@@ -55,7 +55,9 @@ class _FoodPlanState extends State<FoodPlan> {
           ),
         ],
       ),
-      body: WeekCard(weekIndex: currentPage),
+      body: WeekCard(weekIndex: currentPage, onActionCompleted: (){
+        setState(() {});
+      }),
     );
   }
 }

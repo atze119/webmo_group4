@@ -39,8 +39,9 @@ class FoodPlanService{
     }
   }
 
-  Future<void> deleteFoodFromPlan({required String week, required String day}) async {
+  Future<void> deleteFoodFromPlan({required String week, required String day, required VoidCallback onCompleted}) async {
     await DatabaseFoodPlan().deleteFoodFromPlan(week: week, day: day);
+    onCompleted();
   }
 
   Future<void> updateFoodEverywhere(
@@ -70,7 +71,7 @@ class FoodPlanService{
     return await DatabaseFood().getAllFromFoodCollection();
   }
 
-  void addFoodFromListToFoodPlanCollection(FoodModel food, String day, int week) async{
+  Future<void> addFoodFromListToFoodPlanCollection(FoodModel food, String day, int week) async{
     await DatabaseFoodPlan().addFoodToPlan(week: "Woche$week", day: day, foodName: food.name);
   }
 

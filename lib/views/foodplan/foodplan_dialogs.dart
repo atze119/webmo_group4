@@ -18,7 +18,11 @@ class FoodPlanDialogs {
   }
 
   Future<List<TextEditingController>?> openCreateDialog({
-    required BuildContext context, required String week, required String day, required int weekIndex,
+    required BuildContext context,
+    required String week,
+    required String day,
+    required int weekIndex,
+    required VoidCallback onCompleted
   }) =>
       showDialog<List<TextEditingController>>(
         context: context,
@@ -45,9 +49,9 @@ class FoodPlanDialogs {
               children: [
                 TextButton(
                   child: const Text("AUS LISTE AUSWÄHLEN"),
-                  onPressed: (){
+                  onPressed: ()async{
                     Navigator.of(context).pop();
-                    FoodPlanDialogs().showSelectFoodFromListDialog(context, day, weekIndex);
+                    FoodPlanDialogs().showSelectFoodFromListDialog(context, day, weekIndex,onCompleted);
                   },
                 ),
                 TextButton(
@@ -55,6 +59,7 @@ class FoodPlanDialogs {
                     await _foodPlanService.createFood(listController, week, day);
                     await _foodService.createFood(listController);
                     Navigator.of(context).pop(listController);
+                    onCompleted();
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                             "${FoodPlanService.foodModel?.name} wurde zur Datenbank hinzugefügt")));
@@ -109,6 +114,7 @@ class FoodPlanDialogs {
     required BuildContext context,
     required int week,
     required String day,
+    required VoidCallback onCompleted,
   }) async {
     await FoodPlanService().listControllerUpdate(week: week, day: day);
     // ignore: use_build_context_synchronously
@@ -133,6 +139,7 @@ class FoodPlanDialogs {
                     week: "Woche$week",
                     day: day);
                 Navigator.of(context).pop(FoodPlanDialogs.listController);
+                onCompleted();
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text("${FoodService.foodModel?.name} wurde Aktualisiert")));
               },
@@ -144,7 +151,7 @@ class FoodPlanDialogs {
     );
   }
 
-  void showSelectFoodFromListDialog(BuildContext context, String day, int weekIndex) {
+  void showSelectFoodFromListDialog(BuildContext context, String day, int weekIndex, VoidCallback onCompleted) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -167,9 +174,10 @@ class FoodPlanDialogs {
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
                         title: Text(snapshot.data![index].name),
-                        onTap: () {
-                          FoodPlanService().addFoodFromListToFoodPlanCollection(snapshot.data![index], day, weekIndex);
+                        onTap: ()async{
+                          await FoodPlanService().addFoodFromListToFoodPlanCollection(snapshot.data![index], day, weekIndex);
                           Navigator.of(context).pop();
+                          onCompleted();
                         },
                       );
                     },
