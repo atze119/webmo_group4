@@ -18,7 +18,7 @@ class DatabaseReview {
     DocumentReference reviewDocument = reviewCollection.doc(foodName).collection("Bewertung").doc();
     print(reviewDocument.id);
 
-    final imageDatabasePath = storageRef.child("images/$foodName.jpg");
+    final imageDatabasePath = storageRef.child("images/${reviewDocument.id}.jpg");
     
     //Upload review data to Firestore
     await _uploadReviewData(
