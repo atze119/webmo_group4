@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:webmo_group4/models/review/review_model.dart';
@@ -15,14 +14,19 @@ class DatabaseReview {
     required double rating,
     required String reviewMessage,
   }) async {
-    final imageDatabasePath = storageRef.child("images/$foodName.jpg");
+    print("ok");
+    DocumentReference reviewDocument = reviewCollection.doc(foodName).collection("Bewertung").doc();
+    print(reviewDocument.id);
 
-    // Upload review data to Firestore
+    final imageDatabasePath = storageRef.child("images/$foodName.jpg");
+    
+    //Upload review data to Firestore
     await _uploadReviewData(
       imagePath: imageDatabasePath.fullPath,
       foodName: foodName,
       rating: rating,
       reviewMessage: reviewMessage,
+      reviewDocument: reviewDocument.id,
     );
 
     File file = File(imagePath);
@@ -34,8 +38,9 @@ class DatabaseReview {
     required String foodName,
     required double rating,
     required String reviewMessage,
+    required String reviewDocument,
   }) async {
-    await reviewCollection.add({
+    await reviewCollection.doc(foodName).collection("Bewertung").doc(reviewDocument).set({
       "food_name": foodName,
       "image_path": imagePath,
       "message": reviewMessage,

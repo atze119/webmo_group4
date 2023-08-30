@@ -14,7 +14,7 @@ class Reviews extends StatelessWidget {
           children: [
             ListTile(
               leading: Icon(Icons.album),
-              title: DatabaseReview().getReviewForFood(foodName: "Bolognese"),
+              //title: DatabaseReview().getReviewForFood(foodName: "Bolognese"),
             )
           ],
         ),

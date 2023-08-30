@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webmo_group4/viewmodels/auth/auth_service.dart';
 import 'package:webmo_group4/viewmodels/foodplan/foodplan_service.dart';
+import 'package:webmo_group4/views/food_rating/show_ratings.dart';
 import 'package:webmo_group4/views/foodplan/foodplan_dialogs.dart';
 import '../../models/foodmodel/food_model.dart';
 
@@ -51,7 +52,9 @@ class _FoodCardState extends State<FoodCard> {
               title: Text(title),
               subtitle: subtitle,
               onTap: (){
-                FoodPlanDialogs().showFood(context: context, day: widget.day, week: widget.weekIndex + 1);
+                //FoodPlanDialogs().showFood(context: context, day: widget.day, week: widget.weekIndex + 1);
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => Reviews()));
               },
               trailing: isAdmin
               ? Row(
