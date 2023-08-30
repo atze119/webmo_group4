@@ -51,10 +51,17 @@ class _FoodCardState extends State<FoodCard> {
             return ListTile(
               title: Text(title),
               subtitle: subtitle,
-              onTap: (){
-                //FoodPlanDialogs().showFood(context: context, day: widget.day, week: widget.weekIndex + 1);
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Reviews()));
+              onTap: () {
+                if (!snapshot.hasData) {
+                  return;
+                }else {
+                  //FoodPlanDialogs().showFood(context: context, day: widget.day, week: widget.weekIndex + 1);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Reviews(foodModel: snapshot.data!,)));
+                }
               },
               trailing: isAdmin
               ? Row(

@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:webmo_group4/models/review/review_model.dart';
+import '../reviewmodel/review_model.dart';
 
 class DatabaseReview {
   final CollectionReference reviewCollection =

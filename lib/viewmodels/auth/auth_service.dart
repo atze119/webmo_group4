@@ -12,6 +12,16 @@ class AuthService{
     return user != null ? UserModel(uid: user.uid) : null;
   }
 
+  Future signInAnon() async{
+    try{
+      UserCredential userCredential =  await _auth.signInAnonymously();
+      return _userFromUserCredential(userCredential.user);
+    }catch(e){
+      print(e.toString());
+      return null;
+    }
+  }
+
   //sign in with email and password
   Future signInWithEmailAndPassword(String email, String password) async{
     try{
