@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:webmo_group4/models/review/review_model.dart';
+import '../reviewmodel/review_model.dart';
 
 class DatabaseReview {
   final CollectionReference reviewCollection =
@@ -18,7 +18,7 @@ class DatabaseReview {
     DocumentReference reviewDocument = reviewCollection.doc(foodName).collection("Bewertung").doc();
     print(reviewDocument.id);
 
-    final imageDatabasePath = storageRef.child("images/$foodName.jpg");
+    final imageDatabasePath = storageRef.child("images/${reviewDocument.id}.jpg");
     
     //Upload review data to Firestore
     await _uploadReviewData(
