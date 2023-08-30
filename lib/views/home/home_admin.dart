@@ -16,7 +16,7 @@ class HomeAdmin extends StatelessWidget {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: colorbg2,
-          title: const Text("Admin Home Screen"),
+          title: const Text("Admin Ansicht"),
           actions: [
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
@@ -24,7 +24,7 @@ class HomeAdmin extends StatelessWidget {
                 elevation: 0,
               ),
               icon: const Icon(Icons.person),
-              label: const Text("logout"),
+              label: const Text("auslogen"),
               onPressed: () async {
                 await _authService.signOut();
                 // ignore: use_build_context_synchronously
@@ -41,14 +41,14 @@ class HomeAdmin extends StatelessWidget {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const FoodView()));
               },
-              child: const Text("Go to FoodView"),
+              child: const Text("Gehe zur Essensanzeige"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const FoodPlan()));
               },
-              child: const Text("Go to FoodPlan"),
+              child: const Text("Gehe zum Essensplan"),
             ),
           ],
         ));

@@ -11,7 +11,7 @@ class FoodPlan extends StatefulWidget {
 }
 
 class _FoodPlanState extends State<FoodPlan> {
-  bool isAdmin = false;
+  late bool isAdmin;
 
   @override
   void initState() {
