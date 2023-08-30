@@ -2,9 +2,10 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:webmo_group4/shared/constants.dart';
 import 'package:webmo_group4/views/food/food_view.dart';
-import '../../viewmodels/auth/auth_service.dart';
-import '../food_rating/food_rating_view.dart';
-import '../foodplan/food_plan.dart';
+import 'package:webmo_group4/views/food_rating/show_ratings.dart';
+
+import '../../../viewmodels/auth/auth_service.dart';
+import '../../food_rating/food_rating_view.dart';
 
 class HomeAdmin extends StatelessWidget {
   HomeAdmin({super.key});
@@ -16,7 +17,6 @@ class HomeAdmin extends StatelessWidget {
     return Scaffold(
         backgroundColor: colorbg1,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           backgroundColor: colorbg2,
           title: const Text("Admin Home Screen"),
           actions: [
@@ -29,7 +29,6 @@ class HomeAdmin extends StatelessWidget {
               label: const Text("logout"),
               onPressed: () async {
                 await _authService.signOut();
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FoodPlan()));
               },
             ),
           ],
@@ -44,13 +43,6 @@ class HomeAdmin extends StatelessWidget {
               child: const Text("Go to FoodView"),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const FoodPlan()));
-              },
-              child: const Text("Go to FoodPlan"),
-            ),
-            TextButton(
               onPressed: () async {
                 final cameras = await availableCameras();
                 final firstCamera = cameras.first;
@@ -59,10 +51,23 @@ class HomeAdmin extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => TakePictureScreen(
-                          camera: firstCamera,
-                        )));
+                              camera: firstCamera,
+                              foodName:
+                                  "Bolognese", // TODO needs to be changed to variable name which will be chosen before review call
+                            )));
               },
               child: const Text("Go to Review"),
+            ),
+            TextButton(
+              onPressed: () {
+                // ignore: use_build_context_synchronously
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Reviews(),
+                    ));
+              },
+              child: const Text("Show Reviews"),
             ),
           ],
         ));
