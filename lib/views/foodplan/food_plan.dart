@@ -22,17 +22,17 @@ class _FoodPlanState extends State<FoodPlan> {
   int currentPage = 0;
 
   void _previousWeek() {
-    if(currentPage > 0) {
+    if (currentPage > 0) {
       setState(() {
-          currentPage--;
+        currentPage--;
       });
     }
   }
 
   void _nextWeek() {
-    if(currentPage<7) {
+    if (currentPage < 7) {
       setState(() {
-          currentPage++;
+        currentPage++;
       });
     }
   }
@@ -42,27 +42,27 @@ class _FoodPlanState extends State<FoodPlan> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Essensplan"),
+        title: const Text("Essensplan"),
         actions: [
           IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: (){
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
               setState(() {});
             },
           ),
           IconButton(
-            icon: Icon(Icons.arrow_left),
+            icon: const Icon(Icons.arrow_left),
             onPressed: () {
               _previousWeek();
             },
           ),
           IconButton(
-            icon: Icon(Icons.arrow_right),
+            icon: const Icon(Icons.arrow_right),
             onPressed: () {
               _nextWeek();
             },
           ),
-          if(!isAdmin)
+          if (!isAdmin)
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 elevation: 0,
@@ -71,15 +71,17 @@ class _FoodPlanState extends State<FoodPlan> {
               label: const Text("Admin"),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => Authenticate(),
+                  builder: (context) => const Authenticate(),
                 ));
               },
             ),
         ],
       ),
-      body: WeekCard(weekIndex: currentPage, onActionCompleted: (){
-        setState(() {});
-      }),
+      body: WeekCard(
+          weekIndex: currentPage,
+          onActionCompleted: () {
+            setState(() {});
+          }),
     );
   }
 }

@@ -1,6 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:webmo_group4/models/foodmodel/food_model.dart';
 import '../../models/reviewmodel/review_model.dart';
 import '../../viewmodels/review/review_service.dart';
@@ -9,7 +11,7 @@ import 'food_rating_view.dart';
 class Reviews extends StatelessWidget {
   final FoodModel foodModel;
 
-  Reviews({super.key, required this.foodModel});
+  const Reviews({super.key, required this.foodModel});
 
   @override
   Widget build(BuildContext context) {
@@ -25,19 +27,42 @@ class Reviews extends StatelessWidget {
                   return Text('Fehler: ${snapshot.error}');
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
                 if (snapshot.data!.docs.isEmpty) {
                   return const Text('Noch keine Bewertungen vorhanden...');
                 }
-                final List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+                final List<QueryDocumentSnapshot> documents =
+                    snapshot.data!.docs;
                 return ListView.builder(
                   itemCount: documents.length,
                   itemBuilder: (context, index) {
-                    final ReviewModel review = ReviewModel.fromSnapshot(documents[index] as QueryDocumentSnapshot<Map<String, dynamic>>);
+                    final ReviewModel review = ReviewModel.fromSnapshot(
+                        documents[index]
+                            as QueryDocumentSnapshot<Map<String, dynamic>>);
                     return Card(
                       child: ListTile(
-                        title: Text('Sterne: ${review.rating}'),
+                        leading: CachedNetworkImage(
+                          imageUrl: review.imagePath,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                        ),
+                        title: RatingBar.builder(
+                          ignoreGestures: true,
+                          onRatingUpdate: (value) {},
+                          initialRating: review
+                              .rating, // if this value is changed, change it aswell in "foodRating" - attribute
+                          direction: Axis.horizontal,
+                          itemSize: 26,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding:
+                              const EdgeInsets.symmetric(horizontal: 1),
+                          itemBuilder: (context, _) => const Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                        ),
                         subtitle: Text('Bewertung: ${review.message}'),
                       ),
                     );
