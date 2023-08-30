@@ -143,16 +143,11 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
             sizedBox20,
             ElevatedButton(
               onPressed: () async {
-                print(imagePath);
                 DatabaseReview().addReview(
                     imagePath: imagePath,
                     foodName: widget.foodName, // state foodName attribute
                     rating: foodRating!,
                     reviewMessage: _controller.text);
-                print(foodRating);
-                print(_controller.text);
-                // TODO add function to upload into database!
-                // TODO probably neeed to open a Firebase Storage!
               },
               child: const Text("Absenden"),
             )

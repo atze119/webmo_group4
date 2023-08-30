@@ -1,8 +1,8 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import '../reviewmodel/review_model.dart';
 
 class DatabaseReview {
   final CollectionReference reviewCollection =
@@ -15,10 +15,8 @@ class DatabaseReview {
     required double rating,
     required String reviewMessage,
   }) async {
-    print("ok");
     DocumentReference reviewDocument =
         reviewCollection.doc(foodName).collection("Bewertung").doc();
-    print(reviewDocument.id);
 
     final imageDatabasePath =
         storageRef.child("images/${reviewDocument.id}.jpg");
@@ -61,12 +59,7 @@ class DatabaseReview {
     });
   }
 
-  Future<List> getReviewForFood({required foodName}) async {
-    final snapshot =
-        await reviewCollection.where("food_name", isEqualTo: foodName).get();
-    return snapshot.docs
-        .map((doc) => ReviewModel.fromSnapshot(
-            doc as QueryDocumentSnapshot<Map<String, dynamic>>))
-        .toList();
+  Stream<QuerySnapshot<Map<String, dynamic>>> getReviews(String foodName) {
+    return reviewCollection.doc(foodName).collection('Bewertung').snapshots();
   }
 }

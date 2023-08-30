@@ -22,7 +22,7 @@ class WelcomeView extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => FoodPlan(),
+                  builder: (context) => const FoodPlan(),
                 ));
               },
               child: const Text('Essensplan'),

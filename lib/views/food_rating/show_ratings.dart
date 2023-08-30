@@ -37,15 +37,16 @@ class Reviews extends StatelessWidget {
                 return ListView.builder(
                   itemCount: documents.length,
                   itemBuilder: (context, index) {
-                    final ReviewModel review = ReviewModel.fromSnapshot(
-                        documents[index]
-                            as QueryDocumentSnapshot<Map<String, dynamic>>);
+                    final ReviewModel review = ReviewService()
+                        .getReviewModel(documents: documents, index: index);
                     return Card(
                       child: ListTile(
                         leading: CachedNetworkImage(
                           imageUrl: review.imagePath,
                           placeholder: (context, url) =>
                               const CircularProgressIndicator(),
+                          width: 50,
+                          height: 50,
                         ),
                         title: RatingBar.builder(
                           ignoreGestures: true,

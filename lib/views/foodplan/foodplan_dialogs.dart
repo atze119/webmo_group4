@@ -5,7 +5,8 @@ import '../../viewmodels/foodplan/foodplan_service.dart';
 
 class FoodPlanDialogs {
   late TextEditingController controller;
-  static late List<TextEditingController>listController; // im not 100% about this static variable
+  static late List<TextEditingController>
+      listController; // im not 100% about this static variable
   final FoodPlanService _foodPlanService = FoodPlanService();
   final FoodService _foodService = FoodService();
 
@@ -17,13 +18,12 @@ class FoodPlanDialogs {
     controller = TextEditingController();
   }
 
-  Future<List<TextEditingController>?> openCreateDialog({
-    required BuildContext context,
-    required String week,
-    required String day,
-    required int weekIndex,
-    required VoidCallback onCompleted
-  }) =>
+  Future<List<TextEditingController>?> openCreateDialog(
+          {required BuildContext context,
+          required String week,
+          required String day,
+          required int weekIndex,
+          required VoidCallback onCompleted}) =>
       showDialog<List<TextEditingController>>(
         context: context,
         builder: (context) => AlertDialog(
@@ -32,15 +32,15 @@ class FoodPlanDialogs {
             TextField(
                 autofocus: true,
                 decoration:
-                const InputDecoration(hintText: "Geben Sie den Namen an"),
+                    const InputDecoration(hintText: "Geben Sie den Namen an"),
                 controller: listController[0]), // == foodName
             TextField(
                 decoration:
-                const InputDecoration(hintText: "Geben Sie die Art an"),
+                    const InputDecoration(hintText: "Geben Sie die Art an"),
                 controller: listController[1]), // == foodType
             TextField(
                 decoration:
-                const InputDecoration(hintText: "Geben Sie den Preis an"),
+                    const InputDecoration(hintText: "Geben Sie den Preis an"),
                 controller: listController[2]), // == price
           ]),
           actions: [
@@ -49,14 +49,16 @@ class FoodPlanDialogs {
               children: [
                 TextButton(
                   child: const Text("AUS LISTE AUSWÄHLEN"),
-                  onPressed: ()async{
+                  onPressed: () async {
                     Navigator.of(context).pop();
-                    FoodPlanDialogs().showSelectFoodFromListDialog(context, day, weekIndex,onCompleted);
+                    FoodPlanDialogs().showSelectFoodFromListDialog(
+                        context, day, weekIndex, onCompleted);
                   },
                 ),
                 TextButton(
                   onPressed: () async {
-                    await _foodPlanService.createFood(listController, week, day);
+                    await _foodPlanService.createFood(
+                        listController, week, day);
                     await _foodService.createFood(listController);
                     Navigator.of(context).pop(listController);
                     onCompleted();
@@ -72,43 +74,44 @@ class FoodPlanDialogs {
         ),
       );
 
-  Future<void> showFood({
-    required BuildContext context, required String day, required int week})
-  => showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            content: FutureBuilder<FoodModel?>(
-              future: _foodPlanService.getFoodDetails(week, day),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Fehler: ${snapshot.error}');
-                } else if (!snapshot.hasData) {
-                  return Text('Keine Daten verfügbar');
-                } else {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text("Name: ${snapshot.data!.name}"),
-                      Text("Art: ${snapshot.data!.foodType}"),
-                      Text("Preis: ${snapshot.data!.price}"),
-                    ],
-                  );
-                }
-              },
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("SCHLIEßEN"))
-            ],
-          );
-        }
-    );
+  Future<void> showFood(
+          {required BuildContext context,
+          required String day,
+          required int week}) =>
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: FutureBuilder<FoodModel?>(
+                future: _foodPlanService.getFoodDetails(week, day),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Fehler: ${snapshot.error}');
+                  } else if (!snapshot.hasData) {
+                    return const Text('Keine Daten verfügbar');
+                  } else {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text("Name: ${snapshot.data!.name}"),
+                        Text("Art: ${snapshot.data!.foodType}"),
+                        Text("Preis: ${snapshot.data!.price}"),
+                      ],
+                    );
+                  }
+                },
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text("SCHLIEßEN"))
+              ],
+            );
+          });
 
   Future<List<TextEditingController>?> openUpdateDialog({
     required BuildContext context,
@@ -126,9 +129,13 @@ class FoodPlanDialogs {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextFormField(autofocus: true, controller: FoodPlanDialogs.listController[0]), // == foodName
-              TextFormField(controller: FoodPlanDialogs.listController[1]), // == foodType
-              TextFormField(controller: FoodPlanDialogs.listController[2]), // == price
+              TextFormField(
+                  autofocus: true,
+                  controller: FoodPlanDialogs.listController[0]), // == foodName
+              TextFormField(
+                  controller: FoodPlanDialogs.listController[1]), // == foodType
+              TextFormField(
+                  controller: FoodPlanDialogs.listController[2]), // == price
             ],
           ),
           actions: [
@@ -141,7 +148,8 @@ class FoodPlanDialogs {
                 Navigator.of(context).pop(FoodPlanDialogs.listController);
                 onCompleted();
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text("${FoodService.foodModel?.name} wurde Aktualisiert")));
+                    content: Text(
+                        "${FoodService.foodModel?.name} wurde Aktualisiert")));
               },
               child: const Text("ÄNDERN"),
             ),
@@ -151,7 +159,8 @@ class FoodPlanDialogs {
     );
   }
 
-  void showSelectFoodFromListDialog(BuildContext context, String day, int weekIndex, VoidCallback onCompleted) {
+  void showSelectFoodFromListDialog(BuildContext context, String day,
+      int weekIndex, VoidCallback onCompleted) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -163,7 +172,7 @@ class FoodPlanDialogs {
               future: FoodPlanService().getAllFoodFromFoodCollection(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
                   return Text("Fehler: ${snapshot.error}");
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -174,8 +183,10 @@ class FoodPlanDialogs {
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
                         title: Text(snapshot.data![index].name),
-                        onTap: ()async{
-                          await FoodPlanService().addFoodFromListToFoodPlanCollection(snapshot.data![index], day, weekIndex);
+                        onTap: () async {
+                          await FoodPlanService()
+                              .addFoodFromListToFoodPlanCollection(
+                                  snapshot.data![index], day, weekIndex);
                           Navigator.of(context).pop();
                           onCompleted();
                         },
@@ -190,11 +201,4 @@ class FoodPlanDialogs {
       },
     );
   }
-
-
-
-
-
-
-
 }
