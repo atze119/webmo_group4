@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:webmo_group4/shared/constants.dart';
 import 'package:webmo_group4/views/food/food_view.dart';
+import 'package:webmo_group4/views/food_rating/show_ratings.dart';
 
 import '../../../viewmodels/auth/auth_service.dart';
 import '../../food_rating/food_rating_view.dart';
@@ -50,10 +51,23 @@ class HomeAdmin extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => TakePictureScreen(
-                          camera: firstCamera,
-                        )));
+                              camera: firstCamera,
+                              foodName:
+                                  "Bolognese", // TODO needs to be changed to variable name which will be chosen before review call
+                            )));
               },
               child: const Text("Go to Review"),
+            ),
+            TextButton(
+              onPressed: () {
+                // ignore: use_build_context_synchronously
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Reviews(),
+                    ));
+              },
+              child: const Text("Show Reviews"),
             ),
           ],
         ));
