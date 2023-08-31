@@ -148,6 +148,7 @@ class _DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     foodName: widget.foodName, // state foodName attribute
                     rating: foodRating!,
                     reviewMessage: _controller.text);
+                Navigator.of(context).popUntil(ModalRoute.withName('/reviews'));
               },
               child: const Text("Absenden"),
             )

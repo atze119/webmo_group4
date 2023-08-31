@@ -61,9 +61,10 @@ class _FoodCardState extends State<FoodCard> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Reviews(
-                                foodModel: snapshot.data!,
-                              )));
+                        settings: const RouteSettings(name: '/reviews'),
+                        builder: (context) => Reviews(
+                              foodModel: snapshot.data!,
+                            )));
                 }
               },
               trailing: isAdmin

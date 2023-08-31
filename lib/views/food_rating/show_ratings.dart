@@ -43,16 +43,14 @@ class Reviews extends StatelessWidget {
                       child: ListTile(
                         leading: CachedNetworkImage(
                           imageUrl: review.imagePath,
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
+                          placeholder: (context, url) => const CircularProgressIndicator(),
                           width: 50,
                           height: 50,
                         ),
                         title: RatingBar.builder(
                           ignoreGestures: true,
                           onRatingUpdate: (value) {},
-                          initialRating: review
-                              .rating, // if this value is changed, change it aswell in "foodRating" - attribute
+                          initialRating: review.rating, // if this value is changed, change it aswell in "foodRating" - attribute
                           direction: Axis.horizontal,
                           itemSize: 26,
                           allowHalfRating: true,
@@ -65,6 +63,27 @@ class Reviews extends StatelessWidget {
                           ),
                         ),
                         subtitle: Text('Bewertung: ${review.message}'),
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Dialog(
+                                backgroundColor: Colors.transparent,
+                                elevation: 0,
+                                child: Container(
+                                  color: Colors.transparent,
+                                  width: MediaQuery.of(context).size.width * 0.7,
+                                  height: MediaQuery.of(context).size.height * 0.7,
+                                  child: CachedNetworkImage(
+                                    imageUrl: review.imagePath,
+                                    placeholder: (context, url) => const CircularProgressIndicator(),
+                                    fit: BoxFit.cover,  // Passt das Bild in den Container an
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                       ),
                     );
                   },
@@ -72,23 +91,26 @@ class Reviews extends StatelessWidget {
               },
             ),
           ),
-          TextButton(
-            onPressed: () async {
-              final cameras = await availableCameras();
-              final firstCamera = cameras.first;
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: TextButton(
+              onPressed: () async {
+                final cameras = await availableCameras();
+                final firstCamera = cameras.first;
 
-              // ignore: use_build_context_synchronously
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TakePictureScreen(
-                    camera: firstCamera,
-                    foodName: foodModel.name,
+                // ignore: use_build_context_synchronously
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TakePictureScreen(
+                      camera: firstCamera,
+                      foodName: foodModel.name,
+                    ),
                   ),
-                ),
-              );
-            },
-            child: const Text("Bewertung abgeben"),
+                );
+              },
+              child: const Text("Bewertung abgeben"),
+            ),
           ),
         ],
       ),
