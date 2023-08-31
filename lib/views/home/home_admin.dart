@@ -24,7 +24,7 @@ class HomeAdmin extends StatelessWidget {
                 elevation: 0,
               ),
               icon: const Icon(Icons.person),
-              label: const Text("auslogen"),
+              label: const Text("ausloggen"),
               onPressed: () async {
                 await _authService.signOut();
                 // ignore: use_build_context_synchronously

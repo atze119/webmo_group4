@@ -26,92 +26,98 @@ class FoodPlanDialogs {
           required VoidCallback onCompleted}) =>
       showDialog<List<TextEditingController>>(
         context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Essen anlegen"),
-          content: Column(mainAxisSize: MainAxisSize.min, children: [
-            TextField(
-                autofocus: true,
-                decoration:
+        builder: (context) {
+          return SingleChildScrollView(
+            child: AlertDialog(
+              title: const Text("Essen anlegen"),
+              content: Column(mainAxisSize: MainAxisSize.min, children: [
+                TextField(
+                    autofocus: true,
+                    decoration:
                     const InputDecoration(hintText: "Geben Sie den Namen an"),
-                controller: listController[0]), // == foodName
-            TextField(
-                decoration:
+                    controller: listController[0]), // == foodName
+                TextField(
+                    decoration:
                     const InputDecoration(hintText: "Geben Sie die Art an"),
-                controller: listController[1]), // == foodType
-            TextField(
-                decoration:
+                    controller: listController[1]), // == foodType
+                TextField(
+                    decoration:
                     const InputDecoration(hintText: "Geben Sie den Preis an"),
-                controller: listController[2]), // == price
-          ]),
-          actions: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  child: const Text("AUS LISTE AUSWÄHLEN"),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    FoodPlanDialogs().showSelectFoodFromListDialog(
-                        context, day, weekIndex, onCompleted);
-                  },
+                    controller: listController[2]), // == price
+              ]),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      child: const Text("AUS LISTE WÄHLEN"),
+                      onPressed: () async {
+                        Navigator.of(context).pop();
+                        FoodPlanDialogs().showSelectFoodFromListDialog(
+                            context, day, weekIndex, onCompleted);
+                      },
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        await _foodPlanService.createFood(
+                            listController, week, day);
+                        await _foodService.createFood(listController);
+                        Navigator.of(context).pop(listController);
+                        onCompleted();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                "${FoodPlanService.foodModel
+                                    ?.name} wurde zur Datenbank hinzugefügt")));
+                      },
+                      child: const Text("HINZUFÜGEN"),
+                    )
+                  ],
                 ),
-                TextButton(
-                  onPressed: () async {
-                    await _foodPlanService.createFood(
-                        listController, week, day);
-                    await _foodService.createFood(listController);
-                    Navigator.of(context).pop(listController);
-                    onCompleted();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                            "${FoodPlanService.foodModel?.name} wurde zur Datenbank hinzugefügt")));
-                  },
-                  child: const Text("HINZUFÜGEN"),
-                )
               ],
             ),
-          ],
-        ),
+          );
+        }
       );
 
-  Future<void> showFood(
-          {required BuildContext context,
-          required String day,
-          required int week}) =>
-      showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              content: FutureBuilder<FoodModel?>(
-                future: _foodPlanService.getFoodDetails(week, day),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  } else if (snapshot.hasError) {
-                    return Text('Fehler: ${snapshot.error}');
-                  } else if (!snapshot.hasData) {
-                    return const Text('Keine Daten verfügbar');
-                  } else {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Name: ${snapshot.data!.name}"),
-                        Text("Art: ${snapshot.data!.foodType}"),
-                        Text("Preis: ${snapshot.data!.price}"),
-                      ],
-                    );
-                  }
-                },
-              ),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text("SCHLIEßEN"))
-              ],
-            );
-          });
+  //not in use
+  // Future<void> showFood(
+  //         {required BuildContext context,
+  //         required String day,
+  //         required int week}) =>
+  //     showDialog(
+  //         context: context,
+  //         builder: (context) {
+  //           return AlertDialog(
+  //             content: FutureBuilder<FoodModel?>(
+  //               future: _foodPlanService.getFoodDetails(week, day),
+  //               builder: (context, snapshot) {
+  //                 if (snapshot.connectionState == ConnectionState.waiting) {
+  //                   return const CircularProgressIndicator();
+  //                 } else if (snapshot.hasError) {
+  //                   return Text('Fehler: ${snapshot.error}');
+  //                 } else if (!snapshot.hasData) {
+  //                   return const Text('Keine Daten verfügbar');
+  //                 } else {
+  //                   return Column(
+  //                     mainAxisSize: MainAxisSize.min,
+  //                     children: [
+  //                       Text("Name: ${snapshot.data!.name}"),
+  //                       Text("Art: ${snapshot.data!.foodType}"),
+  //                       Text("Preis: ${snapshot.data!.price}"),
+  //                     ],
+  //                   );
+  //                 }
+  //               },
+  //             ),
+  //             actions: [
+  //               TextButton(
+  //                   onPressed: () {
+  //                     Navigator.of(context).pop();
+  //                   },
+  //                   child: const Text("SCHLIEßEN"))
+  //             ],
+  //           );
+  //         });
 
   Future<List<TextEditingController>?> openUpdateDialog({
     required BuildContext context,
@@ -124,36 +130,38 @@ class FoodPlanDialogs {
     return showDialog<List<TextEditingController>>(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text("Aktualisierung"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                  autofocus: true,
-                  controller: FoodPlanDialogs.listController[0]), // == foodName
-              TextFormField(
-                  controller: FoodPlanDialogs.listController[1]), // == foodType
-              TextFormField(
-                  controller: FoodPlanDialogs.listController[2]), // == price
+        return SingleChildScrollView(
+          child: AlertDialog(
+            title: const Text("Aktualisierung"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                    autofocus: true,
+                    controller: FoodPlanDialogs.listController[0]), // == foodName
+                TextFormField(
+                    controller: FoodPlanDialogs.listController[1]), // == foodType
+                TextFormField(
+                    controller: FoodPlanDialogs.listController[2]), // == price
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  await _foodPlanService.updateFoodEverywhere(
+                      listController: FoodPlanDialogs.listController,
+                      week: "Woche$week",
+                      day: day);
+                  Navigator.of(context).pop(FoodPlanDialogs.listController);
+                  onCompleted();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          "${FoodService.foodModel?.name} wurde Aktualisiert")));
+                },
+                child: const Text("ÄNDERN"),
+              ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                await _foodPlanService.updateFoodEverywhere(
-                    listController: FoodPlanDialogs.listController,
-                    week: "Woche$week",
-                    day: day);
-                Navigator.of(context).pop(FoodPlanDialogs.listController);
-                onCompleted();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        "${FoodService.foodModel?.name} wurde Aktualisiert")));
-              },
-              child: const Text("ÄNDERN"),
-            ),
-          ],
         );
       },
     );
